@@ -26,38 +26,38 @@ class InferenceRules:
     @staticmethod
     def range(schema):
         result = []
-        for t in (x for x in schema.get_by_predicate("range") if x[2].is_ref):
-            result.append(lambda g: InferenceRules.apply_range(g, t[0], t[2]))
+        for t in (x for x in schema.get_by_predicate("range") if x.o.is_ref):
+            result.append(lambda g: InferenceRules.apply_range(g, t.s, t.o))
         return result
     
     @staticmethod
     def apply_range(g, p, c):
-        for t in [x for x in g.get_by_predicate(p) if x[2].is_ref]:
-            g.add(t[2].value, "@type", c)
+        for t in [x for x in g.get_by_predicate(p) if x.o.is_ref]:
+            g.add(t.o.value, "@type", c)
 
     @staticmethod
     def domain(schema):
         result = []
-        for t in (x for x in schema.get_by_predicate("domain") if x[2].is_ref):
-            result.append(lambda g: InferenceRules.apply_domain(g, t[0], t[2]))
+        for t in (x for x in schema.get_by_predicate("domain") if x.o.is_ref):
+            result.append(lambda g: InferenceRules.apply_domain(g, t.s, t.o))
         return result
 
     @staticmethod
     def apply_domain(g, p, c):
-        for t in [x for x in g.get_by_predicate(p) if x[2].is_ref]:
-            g.add(t[0], "@type", c)
+        for t in [x for x in g.get_by_predicate(p) if x.o.is_ref]:
+            g.add(t.s, "@type", c)
 
     @staticmethod
     def subClassOf(schema):
         result = []
-        for t in (x for x in schema.get_by_predicate("subClassOf") if x[2].is_ref):
-            result.append(lambda g: InferenceRules.apply_subClassOf(g, GraphValue(t[0], True), t[2]))
+        for t in (x for x in schema.get_by_predicate("subClassOf") if x.o.is_ref):
+            result.append(lambda g: InferenceRules.apply_subClassOf(g, GraphValue(t.s, True), t.o))
         return result
 
     @staticmethod
     def apply_subClassOf(g, a, b):
         for t in [x for x in g.get_by_predicate_object("@type", a)]:
-            g.add(t[0], "@type", b)
+            g.add(t.s, "@type", b)
 
     @staticmethod
     def subPropertyOf(schema):

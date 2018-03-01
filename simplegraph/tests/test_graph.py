@@ -1,6 +1,6 @@
 
 import unittest
-from simplegraph import Graph, GraphValue, InferenceRules, print_graph, spin
+from simplegraph import Graph, GraphValue, Triple, InferenceRules, print_graph, spin
 
 from .data import graph_a0, graph_a1
 
@@ -19,13 +19,13 @@ class TestGraph(unittest.TestCase):
 
     def test_get_by_subject(self):
         g = Graph()
-        t = graph_a0()
-        g.merge(t)
+        g0 = graph_a0()
+        g.merge(g0)
         g.merge(graph_a1())
         r = Graph()
-        for s, p, o in g.get_by_subject('a0'):
-            r.add(s, p, o)
-        self.assertTrue(t.equals(r))
+        for t in g.get_by_subject('a0'):
+            r.add(t.s, t.p, t.o)
+        self.assertTrue(g0.equals(r))
 
     # def test_inference(self):
     #     g = Graph()
