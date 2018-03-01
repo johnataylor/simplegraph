@@ -2,7 +2,7 @@
 import unittest
 from simplegraph import Graph, GraphValue, InferenceRules, print_graph, spin
 
-import data
+from .data import graph_a0, graph_a1
 
 class TestGraph(unittest.TestCase):
     def test_len(self):
@@ -19,9 +19,9 @@ class TestGraph(unittest.TestCase):
 
     def test_get_by_subject(self):
         g = Graph()
-        t = data.graph_a0()
+        t = graph_a0()
         g.merge(t)
-        g.merge(data.graph_a1())
+        g.merge(graph_a1())
         r = Graph()
         for s, p, o in g.get_by_subject('a0'):
             r.add(s, p, o)
