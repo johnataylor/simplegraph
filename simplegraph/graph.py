@@ -30,8 +30,8 @@ class Graph:
         return self.count
 
     def merge(self, graph):
-        for s, p, o in graph.triples():
-            self.add(s, p, o)
+        for t in graph.triples():
+            self.add(t.s, t.p, t.o)
 
     def add(self, s, p, o):
         Graph.__add_to_index(self._spo, s, p, o)
@@ -60,52 +60,52 @@ class Graph:
         for s in self._spo:
             for p in self._spo[s]:
                 for o in self._spo[s][p]:
-                    yield s, p, o
+                    yield Triple(s, p, o)
 
     def get_by_subject(self, s):
         if s in self._spo:
             for p in self._spo[s]:
                 for o in self._spo[s][p]:
-                    yield s, p, o
+                    yield Triple(s, p, o)
         
     def get_by_subject_predicate(self, s, p):
         if s in self._spo and p in self._spo[s]:
             for o in self._spo[s][p]:
-                yield s, p, o
+                yield Triple(s, p, o)
 
     def get_by_predicate(self, p):
         if p in self._pos:
             for o in self._pos[p]:
                 for s in self._pos[p][o]:
-                    yield s, p, o
+                    yield Triple(s, p, o)
 
     def get_by_predicate_object(self, p, o):
         if p in self._pos and o in self._pos[p]:
             for s in self._pos[p][o]:
-                yield s, p, o
+                yield Triple(s, p, o)
 
     def get_by_object(self, o):
         if o in self._osp:
             for s in self._osp[o]:
                 for p in self._osp[o][s]:
-                    yield s, p, o
+                    yield Triple(s, p, o)
 
     def get_by_object_subject(self, o, s):
         if o in self._osp and s in self._osp[o]:
             for p in self._osp[o][s]:
-                yield s, p, o
+                yield Triple(s, p, o)
 
-    def contains(self, s, p, o):
-        if s in self._spo:
-            tpo = self._spo[s]
-            if p in tpo:
-                to = tpo[p]
-                return o in to
+    def contains(self, t):
+        if t.s in self._spo:
+            tpo = self._spo[t.s]
+            if t.p in tpo:
+                to = tpo[t.p]
+                return t.o in to
         return False
 
     def contains_graph(self, g):
-        for s, p, o in g.triples():
-            if not self.contains(s, p, o):
+        for t in g.triples():
+            if not self.contains(t):
                 return False
         return True
 
@@ -115,7 +115,7 @@ class Graph:
         return self.contains_graph(g)
 
 def print_triple(t):
-    print('<' + str(t[0]) + '> <' + str(t[1]) + '> ' + str(t[2]))
+    print('<' + str(t.s) + '> <' + str(t.p) + '> ' + str(t.o))
 
 def print_graph(graph):
     for t in graph.triples():
